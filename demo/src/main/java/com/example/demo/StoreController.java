@@ -21,8 +21,12 @@ public class StoreController {
     public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest request){
         return ResponseEntity.status(HttpStatus.CREATED).body(storeService.createProduct(request));
     }
-    @PostMapping("/products/{productId}/categories/{categoryId}")
-    public ResponseEntity<ProductResponse> addProductToCategory(@PathVariable Long productId ,@PathVariable Long categoryId){
-        return ResponseEntity.ok(storeService.addCategoryToProduct(productId, categoryId));
+    @PostMapping("/products/{productId}/categories/{categoriesId}")
+    public ResponseEntity<ProductResponse> addCategoryToProduct(@PathVariable Long productId , @PathVariable Long categoriesId){
+        return ResponseEntity.ok(storeService.addCategoryToProduct(productId, categoriesId));
+    }
+    @DeleteMapping("/products/{productId}/categories/{categoryId}")
+    public ResponseEntity<ProductResponse> removeCategoryToProduct(@PathVariable Long productId , @PathVariable Long categoryId){
+        return ResponseEntity.ok(storeService.removeCategoryToProduct(categoryId, productId));
     }
 }

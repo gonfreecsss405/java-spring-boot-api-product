@@ -2,7 +2,7 @@ package com.example.demo;
 
 import org.springframework.stereotype.Service;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.stream.*;
 
 @Service
 public class StoreService {
@@ -12,9 +12,9 @@ public class StoreService {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
     }
-    private ProductResponse mapToProduct(Product products){
-        Set<CategoryResponse> categoryResponses = products.getCategories().stream().map(c -> new CategoryResponse(c.getId(), c.getName())).collect(Collectors.toSet());
-        return new ProductResponse(products.getId(), products.getName(), products.getPrice(), categoryResponses);
+    private ProductResponse mapToProduct(Product product){
+        Set<CategoryResponse> categoryResponses = product.getCategories().stream().map(c -> new CategoryResponse(c.getId() , c.getName())).collect(Collectors.toSet());
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), categoryResponses);
     }
     public CategoryResponse createCategory(CategoryRequest request){
         Category category = new Category();
@@ -30,15 +30,25 @@ public class StoreService {
         return mapToProduct(saved);
     }
     public ProductResponse addCategoryToProduct(Long productId , Long categoryId){
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() ->
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> 
             new ResourceNotFoundException("ไม่พบประเภทสินค้าID: " + categoryId)
         );
         Product product = productRepository.findById(productId).orElseThrow(() -> 
             new ResourceNotFoundException("ไม่พบสินค้าID: " + productId)
         );
         product.getCategories().add(category);
-        Product updateProduct = productRepository.save(product);
-
-        return mapToProduct(updateProduct);
+        Product saved = productRepository.save(product);
+        return mapToProduct(saved);
+    }
+    public ProductResponse removeCategoryToProduct(Long categoryId , Long productId){
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> 
+            new ResourceNotFoundException("ไม่พบประเภทสินค้าID: " + categoryId)
+        );
+        Product product = productRepository.findById(productId).orElseThrow(() -> 
+            new ResourceNotFoundException("ไม่พบสินค้าID: " + productId)
+        );
+        product.getCategories().remove(category);
+        Product remove = productRepository.save(product);
+        return mapToProduct(remove);
     }
 }

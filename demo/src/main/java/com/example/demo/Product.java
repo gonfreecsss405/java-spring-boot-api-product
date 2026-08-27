@@ -15,7 +15,7 @@ public class Product {
     @Column(name = "product_price" , nullable = false)
     private double price;
     @ManyToMany(cascade = {CascadeType.PERSIST , CascadeType.MERGE})
-    @JoinTable(name = "product_categories" , joinColumns = @JoinColumn(name = "product_id") , inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @JoinTable(name = "product_category" , joinColumns = @JoinColumn(name = "category_id") , inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Category> categories = new HashSet<>();
 
     public Product(){}
@@ -23,13 +23,12 @@ public class Product {
     public void setName(String name){
         this.name = name;
     }
-    public void setPrice(double price){
-        this.price = price;
-    }
     public void setCategories(Set<Category> categories){
         this.categories = categories;
     }
-
+    public void setPrice(double price){
+        this.price = price;
+    }
     public Long getId(){
         return this.id;
     }
